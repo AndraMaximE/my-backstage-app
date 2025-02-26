@@ -1,0 +1,60 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: create-new-repo
+  title: Create a New Repository with README
+  description: Helps developers create a new GitHub repo with a README file
+spec:
+  owner: user:guest
+  type: service
+
+  parameters:
+    - title: Repository Information
+      required:
+        - repoName
+        - repoOwner
+      properties:
+        repoName:
+          title: Repository Name
+          type: string
+          description: Enter the name of the new repository
+        repoOwner:
+          title: Repository Owner
+          type: string
+          description: Your GitHub username or organization
+        description: 
+          title: Repository description
+          type: string
+          description: A short description for the new repository
+          default: This repo was created with Backstage and it contains a README.md file
+
+  steps:
+    - id: fetch-template
+      name: Fetch Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          repoName: ${{ parameters.repoName }}
+          description: ${{ parameters.description }}
+          repoOwner: ${{ parameters.repoOwner }}
+    - id: publish
+      name: Publish to GitHub
+      action: publish:github
+      input:
+        allowedHosts: ["github.com"]
+        description: This is ${{ parameters.description }}
+        repoUrl: github.com?owner=${{ parameters.repoOwner }}&repo=${{ parameters.repoName }}
+        defaultBranch: main
+        repoVisibility: public
+    - id: register
+      name: Register to catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: "/catalog-info.yaml"
+
+  output:
+    links:
+      - title: View Repository
+        url: https://github.com/${{ parameters.repoOwner }}/${{ parameters.repoName }}
