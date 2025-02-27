@@ -4,6 +4,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import ExtensionIcon from '@material-ui/icons/Extension';
 import LibraryBooks from '@material-ui/icons/LibraryBooks';
 import CreateComponentIcon from '@material-ui/icons/AddCircleOutline';
+import FindInPageOutlinedIcon from '@material-ui/icons/FindInPageOutlined';
 import LogoFull from './LogoFull';
 import LogoIcon from './LogoIcon';
 import {
@@ -63,6 +64,8 @@ export const Root = ({ children }: PropsWithChildren<{}>) => (
       <SidebarGroup label="Search" icon={<SearchIcon />} to="/search">
         <SidebarSearchModal />
       </SidebarGroup>
+      <SidebarDivider />
+      <SidebarItem icon={FindInPageOutlinedIcon} to="create/actions" text="Actions" />
       <SidebarDivider />
       <SidebarGroup label="Menu" icon={<MenuIcon />}>
         {/* Global nav, not org-specific */}

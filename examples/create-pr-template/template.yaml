@@ -1,0 +1,92 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: create-pr-template
+  title: Create a Pull Request for Approval
+  description: Automates the PR process in GitHub.
+spec:
+  owner: user:guest
+  type: service
+
+  parameters:
+    - title: PR Information
+      required:
+        - repoOwner
+        - repoName
+        - branchType
+        - jiraTicket
+        - ticketDescription
+        - targetBranch
+        - fileSourceUrl
+        - filePath
+      properties:
+        repoOwner:
+          title: GitHub Organization/User
+          type: string
+          description: Enter the organization or username
+        repoName:
+          title: GitHub Repository Name
+          type: string
+          description: Enter the repository name
+        branchType:
+          title: Branch Type
+          type: string
+          enum:
+            - feature
+            - bugfix
+            - hotfix
+            - improvement
+          description: Select the type of branch
+        jiraTicket:
+          title: JIRA Ticket ID
+          type: string
+          description: Enter the JIRA ticket ID (e.g., PROJ-123)
+        ticketDescription:
+          title: Ticket Description (Short)
+          type: string
+          description: Short description for the branch (e.g., fix-login-button)
+        targetBranch:
+          title: Target Branch
+          type: string
+          description: The branch you want to merge into
+        fileSourceUrl:
+          title: File source URL
+          type: string
+          description: The source of the file that needs to be added to the repo
+        filePath:
+          title: New path of the file
+          type: string
+          description: Target path within the working directory to download the file as
+        reviewers:
+          title: Reviewers (Optional)
+          type: array
+          items:
+            type: string
+          default: [mec-endava]
+          description: GitHub usernames of the reviewers (leave empty for default)
+
+  steps:
+    - id: fetch-file
+      name: Fetch a file from GitHub
+      action: fetch:plain:file
+      input:
+        url: ${{ parameters.fileSourceUrl }}
+        targetPath: ${{ parameters.filePath }}
+    - id: commit-file
+      name: Commit the file to the repository
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?owner=${{ parameters.repoOwner }}&repo=${{ parameters.repoName }}
+        title: Added new file to Repository
+        description: |
+          This PR automatically adds new file to the repository.
+        branchName: ${{ parameters.branchType }}/${{ parameters.jiraTicket }}-${{ parameters.ticketDescription }}
+        targetBranchName: ${{ parameters.targetBranch }}
+        commitMessage: "Test branch name"
+        reviewers: ${{ parameters.reviewers }}
+        update: true
+  
+  output:
+    links:
+      - title: View PR
+        url: https://github.com/${{ parameters.repoOwner }}/${{ parameters.repoName }}/pulls
