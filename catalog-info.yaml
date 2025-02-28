@@ -14,3 +14,4 @@ spec:
   includes:
     - ./examples/create-new-repo/template.yaml
     - ./examples/create-pr-template/template.yaml
+    - ./examples/create-kolibri-component/template.yaml

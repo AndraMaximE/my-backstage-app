@@ -98,6 +98,11 @@ catalog:
       rules:
         - allow: [Template]
 
+    - type: file
+      target: ../../examples/create-kolibri-component/template.yaml
+      rules:
+        - allow: [Template]
+
     # Local example organizational data
     - type: file
       target: ../../examples/org.yaml
