@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: kolibri-${{ values.name }}
+  title: Kolibri ${{ values.name }}
+  description: ${{ values.name }} ${{ values.type }} for Kolibri
+  annotations:
+    backstage.io/source-location: url:https://github.com/learningequality/kolibri/
+  links:
+    - url: https://kolibri-dev.readthedocs.io/en/develop/
+      title: Kolibri developer documentation
+spec:
+  type: website
+  owner: ${{ values.owner }}
+  lifecycle: production
+  systems: kolibri-system
