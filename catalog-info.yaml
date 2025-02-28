@@ -13,3 +13,4 @@ spec:
   lifecycle: experimental
   includes:
     - ./examples/create-new-repo/template.yaml
+    - ./examples/create-pr-template/template.yaml
